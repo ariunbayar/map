@@ -1,0 +1,8 @@
+*.swp
+*.swo
+*.swn
+__pycache__
+venv
+app/main/settings/dev.py
+app/main/settings/prod.py
+app/db.sqlite3
