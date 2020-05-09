@@ -4,4 +4,28 @@
 
 <h1> Homepage </h1>
 
+{% csrf_token %}
+
+<div id="react-app"></div>
+
+
+<h1>XML to JSON</h1>
+
+<p>
+    <strong>XML</strong>
+    <pre><code>
+        &lt;e name="value"&gt;text&lt;/e&gt;
+    </code></pre>
+</p>
+
+<p>
+    <strong>JSON</strong>
+    <pre><code>
+        {
+            "e": { "@name": "value", "#text": "text" }
+        }
+    </code></pre>
+</p>
+
+
 {% endblock %}

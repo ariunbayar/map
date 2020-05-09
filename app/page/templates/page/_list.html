@@ -1,0 +1,16 @@
+<ul>
+    {% for key, value in rows.items %}
+    <li>
+        <strong>{{ key }}</strong>:
+        {% if value.items %}
+            {% include "page/_list.html" with rows=value only %}
+        {% elif value.count %}
+            {% for row in value %}
+                {% include "page/_list.html" with rows=row only %}
+            {% endfor %}
+        {% else %}
+            ???{{ value }}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>

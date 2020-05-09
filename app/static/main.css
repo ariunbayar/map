@@ -1,0 +1,11 @@
+ul.list-recursive {
+    border-left: 2px solid #ddd;
+    list-style: none;
+    padding-left: 1rem;
+}
+ul.list-recursive:hover {
+    border-color: rgba(255, 193, 7, 1);
+}
+ul.list-recursive .badge {
+    cursor: pointer;
+}
