@@ -1,11 +1,28 @@
 ul.list-recursive {
+    padding-left: 1rem;
     border-left: 2px solid #ddd;
     list-style: none;
-    padding-left: 1rem;
+}
+ul.list-recursive.level0 {
+    background-color: #efefef;
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: .2rem;
 }
 ul.list-recursive:hover {
     border-color: rgba(255, 193, 7, 1);
 }
 ul.list-recursive .badge {
     cursor: pointer;
+}
+
+blockquote{
+    background-color: #efefef;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: .2rem;
+}
+
+.break-all{
+    word-break: break-all;
 }

@@ -15,6 +15,11 @@ def home(request):
     return render(request, 'page/home.html', context)
 
 
+def inspector(request):
+    context = {}
+    return render(request, 'page/inspector.html', context)
+
+
 def qgis_get_capabilities_json(request):
     data = json.loads(request.body)
     url = data.get('url')
@@ -26,9 +31,16 @@ def qgis_get_capabilities_json(request):
         # 'VERSION': '1.3.0',
     # }
     rsp = requests.get(url)
-    capabilities = xmltodict.parse(rsp.content)
 
-    return JsonResponse(capabilities)
+    content_type = rsp.headers.get('content-type')
+
+    print('\n\033[92m\033[01m', end=''); import pprint; pprint.pprint(content_type); print('\n\033[0m', end='')
+
+    if content_type.startswith('text/xml'):
+        data = xmltodict.parse(rsp.content)
+        return JsonResponse(data)
+
+    return HttpResponse(rsp.content, content_type=content_type)
 
 
 def qgis_urls(request, is_delete=False):

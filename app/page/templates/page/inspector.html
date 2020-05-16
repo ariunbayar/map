@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<h1> Inspector </h1>
+
+<div id="react-app"></div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static "inspector.js" %}" type="text/babel"></script>
+{% endblock %}

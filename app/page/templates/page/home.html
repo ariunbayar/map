@@ -4,28 +4,14 @@
 
 <h1> Homepage </h1>
 
-{% csrf_token %}
+<p>
+click here for <a href="{% url "page-inspector" %}">inspector</a>.
+</p>
 
 <div id="react-app"></div>
 
+{% endblock %}
 
-<h1>XML to JSON</h1>
-
-<p>
-    <strong>XML</strong>
-    <pre><code>
-        &lt;e name="value"&gt;text&lt;/e&gt;
-    </code></pre>
-</p>
-
-<p>
-    <strong>JSON</strong>
-    <pre><code>
-        {
-            "e": { "@name": "value", "#text": "text" }
-        }
-    </code></pre>
-</p>
-
-
+{% block js %}
+<script src="{% static "main.js" %}" type="text/babel"></script>
 {% endblock %}
