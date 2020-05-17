@@ -26,3 +26,7 @@ blockquote{
 .break-all{
     word-break: break-all;
 }
+
+.center{
+    text-align: center;
+}

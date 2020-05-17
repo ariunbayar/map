@@ -7,12 +7,23 @@ from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-# from main.qgis_parsers import GetCapabilitiesParser
-
 
 def home(request):
     context = {}
     return render(request, 'page/home.html', context)
+
+
+def wms(request):
+
+    payload = json.loads(request.body)
+
+    base_uri = payload.get('wms')
+    queryargs = payload.get('queryargs')
+
+    rsp = requests.get(base_uri, queryargs)
+    content_type = rsp.headers.get('content-type')
+
+    return HttpResponse(rsp.content, content_type=content_type)
 
 
 def inspector(request):

@@ -6,6 +6,7 @@ import page.views
 urlpatterns = [
 
     path('', page.views.home, name='page-home'),
+    path('WMS/', page.views.wms, name='page-wms'),
 
     path('inspector/', page.views.inspector, name='page-inspector'),
     path('inspector/qgis/get-capabilities/json/', page.views.qgis_get_capabilities_json),
