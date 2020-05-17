@@ -48,9 +48,15 @@ class ListRecursive extends React.Component {
 
     render() {
 
+
+
         const items = []
 
-        if (typeof(this.state.data) === 'string') {
+        if (this.state.data === null) {
+
+            items.push(<span>NULL</span>)
+
+        } else if (typeof(this.state.data) === 'string') {
 
             return (
                 <div>

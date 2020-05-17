@@ -55,7 +55,7 @@ class Capabilities {
 
     getBoundingBox(CRS) {
 
-        const bbox = this.xml.querySelector(`WMS_Capabilities > Capability > Layer > BoundingBox[CRS="${CRS}"]`)
+        const bbox = this.xml.querySelector(`WMS_Capabilities > Capability > Layer > Layer > BoundingBox[CRS="${CRS}"]`)
 
         return ['minx', 'miny', 'maxx', 'maxy']
             .map((attr) => bbox.getAttribute(attr))
@@ -125,9 +125,12 @@ class Layers extends React.Component {
 
     constructor(props) {
         super(props)
+
+        const layers = this.props.capabilities.getLayers()
+
         this.state = {
-            layers: this.props.capabilities.getLayers(),
-            layers_active: [],
+            layers: layers,
+            layers_active: [layers[0][0]],
         }
 
         this.handleToggleLayer = this.handleToggleLayer.bind(this)
@@ -142,10 +145,13 @@ class Layers extends React.Component {
         } else {
             layers_active = [...layers_active, name]
         }
-        console.log(layers_active);
 
         this.setState({layers_active})
         this.props.handleToggleLayers(layers_active)
+    }
+
+    componentDidMount() {
+        this.props.handleToggleLayers(this.state.layers_active)
     }
 
     render() {
@@ -175,13 +181,17 @@ class WebMap extends React.Component {
     constructor(props) {
         super(props)
 
-        const {capabilities} = this.props
+        const {capabilities} = props
 
         this.state = {
             wms: capabilities.getWMS(),
+            //crs: 'EPSG:4326',
+            //bbox: capabilities.getBoundingBox('EPSG:4326'),
+            //crs: 'CRS:84',
+            //bbox: capabilities.getBoundingBox('CRS:84'),
             crs: 'EPSG:3857',
-            bbox: capabilities.getBoundingBox('EPSG:3857'),
-            layers: '',
+            bbox: '11271098.44281895,5635549.221409475,11897270.578531114,6261721.357121639',
+            layers: props.layers,
             image_src: '',
             is_loading: true,
         }
@@ -215,8 +225,8 @@ class WebMap extends React.Component {
             ['BBOX', bbox],
             ['CRS', this.state.crs],
             ['LAYERS', layers],
-            ['WIDTH', '400'],
-            ['HEIGHT', '300'],
+            ['WIDTH', '256'],
+            ['HEIGHT', '256'],
             ['STYLES', ''],
             ['FORMAT', 'image/png'],
             ['DPI', '96'],
@@ -369,7 +379,7 @@ class GIS extends React.Component {
             <div className="container">
                 <div className="row">
                     <div className="col-9">
-                        {this.state.capabilities &&
+                        {this.state.capabilities && this.state.layers &&
                             <WebMap
                                 capabilities={this.state.capabilities}
                                 layers={this.state.layers}
