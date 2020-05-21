@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+
+import curses
+import os
+import sys
+
+from datetime import datetime
+
+if len(sys.argv) == 1:
+    print("Error: No filename supplied for command output")
+    sys.exit(1)
+
+cmd_output_filename = sys.argv[1]
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+options = [
+    (
+        'Runserver app',
+        (
+            "source {base_dir}/venv/bin/activate; "
+            "cd {base_dir}/app; "
+            "./manage.py runserver 8100; "
+        ).format(
+            base_dir=BASE_DIR,
+        )
+    ),
+    (
+        'Runserver auth',
+        (
+            "source {base_dir}/venv/bin/activate; "
+            "cd {base_dir}/auth; "
+            "./manage.py runserver 8101; "
+        ).format(
+            base_dir=BASE_DIR,
+        )
+    ),
+    (
+        'Runserver auth',
+        (
+            "source {base_dir}/venv/bin/activate; "
+            "cd {base_dir}/geoproxy; "
+            "./manage.py runserver 8102; "
+        ).format(
+            base_dir=BASE_DIR,
+        )
+    ),
+    (
+        'Quit / exit program',
+        'quit',
+    ),
+]
+current_option = 0
+num_options = len(options)
+
+
+def get_term_size():
+    return map(int, os.popen('stty size', 'r').read().split())
+
+HEIGHT, WIDTH = get_term_size()
+
+curses.initscr()
+curses.start_color()
+curses.use_default_colors()
+win = curses.newwin(HEIGHT, WIDTH, 0, 0)
+win.keypad(1)
+curses.noecho()
+curses.curs_set(0)
+win.border(0)
+win.nodelay(1)
+
+KEY_ESCAPE = 27
+KEY_LETTER_J = 106
+KEY_LETTER_K = 107
+KEY_LETTER_Q = 113
+KEY_UP = 259
+KEY_DOWN = 258
+KEY_ENTER = 10
+
+curses.init_pair(1, curses.COLOR_GREEN, -1)
+color_highlight = curses.color_pair(1) | curses.A_BOLD | curses.A_REVERSE
+color = curses.color_pair(1) | curses.A_BOLD
+
+key = -1
+last_cmd = ''
+while True:
+
+    win.border(0)
+    win.addstr(0, 2, 'Toolset for Docker project:')
+    win.timeout(50)
+
+    line = 2
+    for index, (text, cmd) in enumerate(options):
+        if index == current_option:
+            args = [color_highlight]
+        else:
+            args = []
+        win.addnstr(line, 4, text, WIDTH - 5, *args)
+
+        line += 2
+
+    if key:
+        if key in [KEY_ESCAPE, KEY_LETTER_Q]:
+            break
+
+        if key in [KEY_LETTER_K, KEY_UP]:
+            current_option = max(0, current_option - 1)
+
+        if key in [KEY_LETTER_J, KEY_DOWN]:
+            current_option = min(num_options - 1, current_option + 1)
+
+
+        win.addstr(22, 6, ' ' * len(last_cmd))
+        cmd = last_cmd = options[current_option][1]
+        win.addstr(21, 2, 'COMMAND ')
+        win.addstr(22, 6, cmd, color)
+
+        if key in [KEY_ENTER]:
+            with open(cmd_output_filename, 'w') as f:
+                f.write(cmd)
+            break
+
+        if key > -1:
+            win.addstr(19, 2, 'DEBUG: %s' % (key), color_highlight)
+
+    key = win.getch()
+
+    if key == curses.KEY_RESIZE:
+        HEIGHT, WIDTH = get_term_size()
+        win.clear()
+
+curses.endwin()

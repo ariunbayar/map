@@ -1,0 +1,13 @@
+{% extends "layout_public.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div id="react-app"></div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static "mapview/index.jsx" %}" type="text/babel"></script>
+{% endblock %}

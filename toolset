@@ -1,0 +1,25 @@
+#!/bin/sh
+
+DIR=$(dirname "$(readlink -e "$0")")
+
+while :; do
+    cmd_file=$(mktemp '/dev/shm/toolset_XXXXXX')
+    touch "$cmd_file"
+
+    "$DIR/toolset_files/command_choice" "$cmd_file"
+
+    cmd=$(cat "$cmd_file")
+    rm "$cmd_file"
+
+    if [ "$cmd" = "quit" ]; then
+        break
+    fi
+
+    if [ -n "$cmd" ]; then
+        echo
+        echo "Command:"
+        echo "    $cmd"
+        echo
+        gnome-terminal -- bash -c "$cmd"
+    fi
+done
