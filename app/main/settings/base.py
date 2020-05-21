@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'page.apps.PageConfig',
+    'secure.apps.SecureConfig',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'page-home'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Static files (CSS, JavaScript, Images)

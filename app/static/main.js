@@ -426,6 +426,11 @@ class App extends React.Component {
         return (
             <div>
 
+
+                <p>Copy this url:<br/>http://qgis.20k.mn:8080/cgi-bin/qgis_mapserv.fcgi</p>
+                <p>Paste & Press enter</p>
+                <p>If it doesn't show, <strong>refresh</strong> the page</p>
+
                 <form onSubmit={this.onSubmit}>
                     <input type="text"
                         className="form-control"
