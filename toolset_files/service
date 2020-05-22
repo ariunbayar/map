@@ -58,7 +58,7 @@ function execute_app {
     PIPE_TMP=$(mktemp -u /dev/shm/${FILENAME_PREFIX}XXXXXX)
     mkfifo -m 600 "$PIPE_TMP"
 
-    bash -c "while read line; do echo 🐳  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
+    bash -c "while read line; do echo ⚪  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
     PID_READER=$!
 
     script -q -f -a -c "bash -c 'cd $DIR/app; source ../venv/bin/activate; ./manage.py runserver $PORT'" "$PIPE_TMP" < /dev/null 2> /dev/null > /dev/null &
@@ -78,7 +78,7 @@ function execute_auth {
     PIPE_TMP=$(mktemp -u /dev/shm/${FILENAME_PREFIX}XXXXXX)
     mkfifo -m 600 "$PIPE_TMP"
 
-    bash -c "while read line; do echo 🏁  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
+    bash -c "while read line; do echo 🔵  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
     PID_READER=$!
 
     script -q -f -a -c "bash -c 'cd $DIR/auth; source ../venv/bin/activate; ./manage.py runserver $PORT'" "$PIPE_TMP" < /dev/null 2> /dev/null > /dev/null &
@@ -98,7 +98,7 @@ function execute_geo {
     PIPE_TMP=$(mktemp -u /dev/shm/${FILENAME_PREFIX}XXXXXX)
     mkfifo -m 600 "$PIPE_TMP"
 
-    bash -c "while read line; do echo 🕊  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
+    bash -c "while read line; do echo ⚫  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
     PID_READER=$!
 
     script -q -f -a -c "bash -c 'cd $DIR/geoproxy; source ../venv/bin/activate; ./manage.py runserver $PORT'" "$PIPE_TMP" < /dev/null 2> /dev/null > /dev/null &
