@@ -16,16 +16,39 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const axiosInstance = axios.create()
+class Service {
 
+    handleResponse(response) {
+        return response.text().then(text => {
+            const data = text && JSON.parse(text)
+            if (!response.ok) {
+                if ([401, 403].indexOf(response.status) !== -1) {
+                    // TODO auto logout if 401 Unauthorized or 403 Forbidden response returned from api
+                    location.reload(true)
+                }
+                const error = (data && data.message) || response.statusText
+                return Promise.reject(error)
+            }
 
-axiosInstance.interceptors.request.use(
-    config => {
-        config.headers['X-CSRFToken'] = getCookie('csrftoken')
-        return config
-    },
-    error => Promise.reject(error),
-)
+            return data
+        })
+    }
+
+    token_obtain(data) {
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(data),
+        }
+        return fetch('http://localhost:8101/api/token/obtain/', requestOptions).then(this.handleResponse)
+    }
+
+}
+
+const service = new Service()
 
 
 class Login extends React.Component {
@@ -50,7 +73,11 @@ class Login extends React.Component {
     }
 
     handleSubmit() {
-        console.log('submit', this.state)
+
+        service.token_obtain()
+            .then((rsp) => {
+                console.log(rsp);
+            })
         // TODO submit username, password
         // TODO acquire token
         // TODO save to local storage
@@ -78,7 +105,7 @@ class Login extends React.Component {
                         <tr>
                             <td>Нэр </td>
                             <td>
-                                <input type="button" onClick={this.handleSubmit}/>
+                                <button type="button" onClick={this.handleSubmit}>Нэвтрэх</button>
                             </td>
                         </tr>
                     </tbody>
