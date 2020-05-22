@@ -1,0 +1,150 @@
+#!/bin/bash
+
+# 💯💣💬🏁💠🔰➕📽🎧🎄🛵🚲🐳🕊
+
+
+DIR=$(dirname "$(dirname "$(readlink -e "$0")")")
+
+FILENAME_PREFIX="gazar_dev_"
+
+PIPE_ALL="/dev/shm/${FILENAME_PREFIX}logs"
+FILE_PID_LIST="/dev/shm/${FILENAME_PREFIX}pid_list"
+FILE_TMP_LIST="/dev/shm/${FILENAME_PREFIX}tmp_list"
+
+ACTION="$1"
+
+
+function create_files {
+
+    [ ! -p "$PIPE_ALL" ] && mkfifo -m 600 "$PIPE_ALL"
+    : > "$FILE_PID_LIST"
+    : > "$FILE_TMP_LIST"
+
+}
+
+
+function stop_service {
+
+    if [ -f "$PIPE_ALL" ]; then
+        rm "$PIPE_ALL"
+    fi
+
+    if [ -f "$FILE_PID_LIST" ]; then
+        while read proc; do
+            #kill "$proc"
+            if ps -p "$proc" > /dev/null; then
+                kill -9 "$proc"
+            fi
+        done < "$FILE_PID_LIST"
+        rm "$FILE_PID_LIST"
+    fi
+
+    if [ -f "$FILE_TMP_LIST" ]; then
+        while read file; do
+            if [ -f "$file" ]; then
+                rm "$file"
+            fi
+        done < "$FILE_TMP_LIST"
+        rm "$FILE_TMP_LIST"
+    fi
+
+}
+
+
+function execute_app {
+
+    PORT="$1"
+
+    PIPE_TMP=$(mktemp -u /dev/shm/${FILENAME_PREFIX}XXXXXX)
+    mkfifo -m 600 "$PIPE_TMP"
+
+    bash -c "while read line; do echo 🐳  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
+    PID_READER=$!
+
+    script -q -f -a -c "bash -c 'cd $DIR/app; source ../venv/bin/activate; ./manage.py runserver $PORT'" "$PIPE_TMP" < /dev/null 2> /dev/null > /dev/null &
+    PID_CMD=$!
+
+    echo "$PIPE_TMP" >> "$FILE_TMP_LIST"
+    echo "$PID_READER" >> "$FILE_PID_LIST"
+    echo "$PID_CMD" >> "$FILE_PID_LIST"
+
+}
+
+
+function execute_auth {
+
+    PORT="$1"
+
+    PIPE_TMP=$(mktemp -u /dev/shm/${FILENAME_PREFIX}XXXXXX)
+    mkfifo -m 600 "$PIPE_TMP"
+
+    bash -c "while read line; do echo 🏁  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
+    PID_READER=$!
+
+    script -q -f -a -c "bash -c 'cd $DIR/auth; source ../venv/bin/activate; ./manage.py runserver $PORT'" "$PIPE_TMP" < /dev/null 2> /dev/null > /dev/null &
+    PID_CMD=$!
+
+    echo "$PIPE_TMP" >> "$FILE_TMP_LIST"
+    echo "$PID_READER" >> "$FILE_PID_LIST"
+    echo "$PID_CMD" >> "$FILE_PID_LIST"
+
+}
+
+
+function execute_geo {
+
+    PORT="$1"
+
+    PIPE_TMP=$(mktemp -u /dev/shm/${FILENAME_PREFIX}XXXXXX)
+    mkfifo -m 600 "$PIPE_TMP"
+
+    bash -c "while read line; do echo 🕊  "'"$line"'"; done < '$PIPE_TMP' > '$PIPE_ALL' " &
+    PID_READER=$!
+
+    script -q -f -a -c "bash -c 'cd $DIR/geoproxy; source ../venv/bin/activate; ./manage.py runserver $PORT'" "$PIPE_TMP" < /dev/null 2> /dev/null > /dev/null &
+    PID_CMD=$!
+
+    echo "$PIPE_TMP" >> "$FILE_TMP_LIST"
+    echo "$PID_READER" >> "$FILE_PID_LIST"
+    echo "$PID_CMD" >> "$FILE_PID_LIST"
+
+}
+
+
+if [ "$ACTION" = "start" ]; then
+
+    stop_service
+    create_files
+    execute_app  8100
+    execute_auth 8101
+    execute_geo  8102
+
+fi
+
+
+if [ "$ACTION" = "stop" ]; then
+
+    stop_service
+
+fi
+
+
+if [ "$ACTION" = "logs" ]; then
+
+    cat "$PIPE_ALL"
+
+fi
+
+
+if [ -z "$ACTION" ]; then
+
+    echo ""
+    echo "    Usage:"
+    echo "        toolset_files/service start"
+    echo "        toolset_files/service stop"
+    echo "        toolset_files/service logs"
+    echo ""
+
+fi
+
+

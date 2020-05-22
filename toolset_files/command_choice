@@ -16,31 +16,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 options = [
     (
-        'Runserver app',
+        'Start',
         (
-            "source {base_dir}/venv/bin/activate; "
-            "cd {base_dir}/app; "
-            "./manage.py runserver 8100; "
+            "{base_dir}/toolset_files/service start"
         ).format(
             base_dir=BASE_DIR,
         )
     ),
     (
-        'Runserver auth',
+        'Stop',
         (
-            "source {base_dir}/venv/bin/activate; "
-            "cd {base_dir}/auth; "
-            "./manage.py runserver 8101; "
+            "{base_dir}/toolset_files/service stop"
         ).format(
             base_dir=BASE_DIR,
         )
     ),
     (
-        'Runserver auth',
+        'Logs',
         (
-            "source {base_dir}/venv/bin/activate; "
-            "cd {base_dir}/geoproxy; "
-            "./manage.py runserver 8102; "
+            "gnome-terminal -- bash -c '{base_dir}/toolset_files/service logs'"
         ).format(
             base_dir=BASE_DIR,
         )
@@ -101,6 +95,8 @@ while True:
 
     if key:
         if key in [KEY_ESCAPE, KEY_LETTER_Q]:
+            with open(cmd_output_filename, 'w') as f:
+                f.write('quit')
             break
 
         if key in [KEY_LETTER_K, KEY_UP]:

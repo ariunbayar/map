@@ -16,10 +16,8 @@ while :; do
     fi
 
     if [ -n "$cmd" ]; then
-        echo
         echo "Command:"
         echo "    $cmd"
-        echo
-        gnome-terminal -- bash -c "$cmd"
+        bash -c "$cmd"
     fi
 done
