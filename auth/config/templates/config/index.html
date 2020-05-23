@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<h1>Тохиргоо</h1>
+
+<form method="POST" action="" class="" novalidate>
+    {% csrf_token %}
+
+    <table>
+        <tbody>
+            {{ form.as_table }}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td> </td>
+                <td>
+                    <input type="submit" value="Хадгалах"/>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Нэр</th>
+            <th>Утга</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for config in configs %}
+        <tr>
+            <td>{{ config.name }}</td>
+            <td>{{ config.value }}</td>
+            <td>
+                <a href="{% url "config:delete" config.pk %}">Х</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

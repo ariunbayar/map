@@ -4,37 +4,34 @@
 
 {% block content %}
 
-        <h1>Нэвтрэх</h1>
+<h1>Нэвтрэх</h1>
 
-        <form method="POST" action="" class="">
-            {% csrf_token %}
+<form method="POST" action="" class="">
+    {% csrf_token %}
 
-            {% if error %}
-                <div>{{error}}</div>
-            {% endif %}
+    {% if error %}
+        <div>{{error}}</div>
+    {% endif %}
 
-            <div>
-                <label> Нэвтрэх нэр: </label>
-                <div>
-                    <input type="text" name="username" class="span" value="{{ username }}"/>
-                </div>
-            </div>
-
-            <div>
-                <label>  Нууц үг: </label>
-                <div>
-                    <input type="password" name="password" class="span"/>
-                </div>
-            </div>
-
-            <div>
-                <input type="submit" value="Нэвтрэх" class="btn big span"/>
-            </div>
-
-        </form>
+    <div>
+        <label> Нэвтрэх нэр: </label>
+        <div>
+            <input type="text" name="username" class="span" value="{{ username }}"/>
+        </div>
     </div>
 
-</div>
+    <div>
+        <label>  Нууц үг: </label>
+        <div>
+            <input type="password" name="password" class="span"/>
+        </div>
+    </div>
+
+    <div>
+        <input type="submit" value="Нэвтрэх" class="btn big span"/>
+    </div>
+
+</form>
 
 
 {% endblock %}

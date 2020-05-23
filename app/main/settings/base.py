@@ -86,9 +86,9 @@ USE_L10N = True
 USE_TZ = True
 
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'secure:login'
 LOGIN_REDIRECT_URL = 'page-home'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'secure:login'
 
 
 # Static files (CSS, JavaScript, Images)

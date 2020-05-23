@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'secure.apps.SecureConfig',
     'auth_token.apps.AuthTokenConfig',
+    'config.apps.ConfigConfig',
 ]
 
 MIDDLEWARE = [

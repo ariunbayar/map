@@ -20,3 +20,7 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect(settings.LOGOUT_REDIRECT_URL)
+
+
+def login_token(request):
+    return redirect('map:index')

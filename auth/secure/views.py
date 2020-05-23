@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_GET
 
+from config.utils import get_config
+
 
 def _get_user_redir(request, user):
 
@@ -50,6 +52,8 @@ def token(request):
             'id': request.user.pk,
         }
 
-    encoded_jwt = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    secret = get_config('SHARED_SECRET')
+
+    encoded_jwt = jwt.encode(payload, secret, algorithm='HS256')
 
     return redirect('http://localhost:8100/auth/?t=' + encoded_jwt.decode())

@@ -7,6 +7,16 @@
 </head>
 <body>
 
+    <div>
+        <a href="{% url "login" %}">Login</a>
+        |
+        <a href="{% url "logout" %}">Logout</a>
+        |
+        <a href="{% url "token" %}">Token</a>
+        |
+        <a href="{% url "config:index" %}">Config</a>
+    </div>
+
     <div class="container">
         {% block content %}{% endblock %}
     </div>

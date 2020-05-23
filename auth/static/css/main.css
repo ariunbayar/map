@@ -2,3 +2,13 @@
     width: 60rem;
     margin: 0 auto;
 }
+
+table {
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+td, th{
+    border: 1px solid #ccc;
+    padding: .4rem 1.4rem;
+}

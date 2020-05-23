@@ -15,12 +15,21 @@ urlpatterns = [
     path('inspector/qgis/urls/', page.views.qgis_urls),
     path('inspector/qgis/urls/delete/', page.views.qgis_urls, {'is_delete': True}),
 
-    path('map/', include([
-        path('', mapview.views.index),
-    ])),
+    path('map/', include((
+        [
+            path('', mapview.views.index, name='index'),
+        ],
+        'map'
+    ))),
 
 
-    path('login/', secure.views.login, name='login'),
-    path('logout/', secure.views.logout, name='logout'),
+    path('', include((
+        [
+            path('login/', secure.views.login, name='login'),
+            path('logout/', secure.views.logout, name='logout'),
+            path('auth/', secure.views.login_token, name='auth'),
+        ],
+        'secure'
+    )))
 
 ]
