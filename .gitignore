@@ -2,7 +2,7 @@
 *.swo
 *.swn
 __pycache__
+node_modules
 venv
 app/main/settings/dev.py
 app/main/settings/prod.py
-app/db.sqlite3

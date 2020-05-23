@@ -1,19 +1,16 @@
-{% extends "layout.html" %}
+{% extends "layout_public.html" %}
 
 {% load static %}
 
 {% block content %}
-
-<h1> Homepage </h1>
-
-<p>
-click here for <a href="{% url "page-inspector" %}">inspector</a>.
-</p>
 
 <div id="react-app"></div>
 
 {% endblock %}
 
 {% block js %}
-<script src="{% static "main.js" %}" type="text/babel"></script>
+<script src="{% static "js/page/main.js" %}"></script>
+{% comment %}
+<script src="{% static "main.js" %}"></script>
+{% endcomment %}
 {% endblock %}

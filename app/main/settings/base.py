@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'page.apps.PageConfig',
     'secure.apps.SecureConfig',
     'mapview.apps.MapviewConfig',
+    'config.apps.ConfigConfig',
 ]
 
 MIDDLEWARE = [

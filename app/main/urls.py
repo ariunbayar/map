@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 import page.views
 import secure.views
@@ -8,6 +8,8 @@ import mapview.views
 urlpatterns = [
 
     path('', page.views.home, name='page-home'),
+    re_path('^p/', page.views.home, name='page-home'),
+
     path('WMS/', page.views.wms, name='page-wms'),
 
     path('inspector/', page.views.inspector, name='page-inspector'),

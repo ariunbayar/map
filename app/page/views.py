@@ -9,10 +9,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
 def home(request):
-    context = {}
-    return render(request, 'page/home.html', context)
+    return render(request, 'page/home.html', {})
+
+
+# @login_required
+# def home(request):
+    # context = {}
+    # return render(request, 'page/home.html', context)
 
 
 @login_required
