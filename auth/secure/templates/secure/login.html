@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+
+        <h1>Нэвтрэх</h1>
+
+        <form method="POST" action="" class="">
+            {% csrf_token %}
+
+            {% if error %}
+                <div>{{error}}</div>
+            {% endif %}
+
+            <div>
+                <label> Нэвтрэх нэр: </label>
+                <div>
+                    <input type="text" name="username" class="span" value="{{ username }}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>  Нууц үг: </label>
+                <div>
+                    <input type="password" name="password" class="span"/>
+                </div>
+            </div>
+
+            <div>
+                <input type="submit" value="Нэвтрэх" class="btn big span"/>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+var el_username = document.querySelector('input[name="username"]');
+document.querySelector('input[name="' + (el_username.value ? 'password' : 'username') + '"]').focus();
+</script>
+{% endblock %}
