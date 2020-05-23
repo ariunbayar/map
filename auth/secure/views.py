@@ -1,42 +1,55 @@
-from datetime import timedelta
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.utils.timezone import localtime, now
+import jwt
 
-from auth_token.models import TokenRefresh, TokenAccess
-from user.models import User
+from django.conf import settings
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_GET
 
 
-@require_POST
-def token_obtain(request):
+def _get_user_redir(request, user):
 
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+    if request.GET.get('next'):
+        return redirect(request.GET.get('next'))
 
-    user = User.objects.all().last()
-    is_valid = username == 'user' and password == 'user'
+    return redirect(settings.LOGIN_REDIRECT_URL)
 
-    if is_valid and user:
 
-        token_refresh = TokenRefresh()
-        token_refresh.token = TokenRefresh.objects.generate_token()
-        token_refresh.user = user
-        token_refresh.expires_at = localtime(now()) + timedelta(days=30)
-        token_refresh.save()
+@csrf_protect
+def login(request):
+    context = {}
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if username and password:
+            user = auth.authenticate(request, username=username, password=password)
+            if user:
+                auth.login(request, user)
+                return _get_user_redir(request, user)
+            else:
+                context['error'] = 'Нэвтрэх нэр, нууц үг буруу байна'
+        else:
+            context['error'] = 'Нэвтрэх нэр, нууц үгээ оруулна уу'
+        context['username'] = username
+    return render(request, 'secure/login.html', context)
 
-        token_access = TokenAccess()
-        token_access.token = TokenAccess.objects.generate_token()
-        token_access.user = user
-        token_access.expires_at = localtime(now()) + timedelta(hours=1)
-        token_access.save()
 
-        context = {
-                'refresh': token_refresh.token,
-                'access': token_access.token,
-            }
-        return JsonResponse(context)
+@require_GET
+@login_required
+def logout(request):
+    auth.logout(request)
+    return redirect(settings.LOGOUT_REDIRECT_URL)
 
-    else:
 
-        context = {'алдаа': "Нэвтрэх нэр, нууц үг буруу байна"}
-        return JsonResponse(context, status=400)
+@require_GET
+@login_required
+def token(request):
+
+    payload = {
+            'id': request.user.pk,
+        }
+
+    encoded_jwt = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+    return redirect('http://localhost:8100/auth/?t=' + encoded_jwt.decode())

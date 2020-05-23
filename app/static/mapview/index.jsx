@@ -16,16 +16,34 @@ function getCookie(name) {
     return cookieValue;
 }
 
-class Service {
 
+
+class AuthService {
+
+    constructor() {
+        this.base_url = 'http://localhost:8101'
+    }
+
+    /*
     handleResponse(response) {
+
         return response.text().then(text => {
+
             const data = text && JSON.parse(text)
+
             if (!response.ok) {
+
+                if (response.status == 403) {
+                    this.csrf_obtain().then(({csrf}) => {
+                        localStorage.setItem('auth_csrf_token', csrf)
+                    })
+                }
+
                 if ([401, 403].indexOf(response.status) !== -1) {
                     // TODO auto logout if 401 Unauthorized or 403 Forbidden response returned from api
                     location.reload(true)
                 }
+
                 const error = (data && data.message) || response.statusText
                 return Promise.reject(error)
             }
@@ -33,22 +51,76 @@ class Service {
             return data
         })
     }
+    */
+
+
+    doRequest(req) {
+
+        return fetch(req).then(rsp => {
+
+            return rsp.text().then(text => {
+
+                if (rsp.status == 200) {
+                    return text && JSON.parse(text)
+                }
+
+                if (rsp.status == 403) {
+
+                    const opts = {
+                        method: 'GET',
+                        headers: {'X-Requested-With': 'XMLHttpRequest'},
+                    }
+
+                    return fetch(this.base_url + '/api/csrf/obtain/', opts).then(rsp_csrf => {
+                        console.log('rsp_csrf:', rsp_csrf);
+                        return rsp_csrf.json().then(({csrf}) => {
+                            console.log('rsp_csrf.json():', csrf);
+                            localStorage.setItem('auth_csrf_token', csrf)
+                            return csrf
+                        })
+                    }).then((csrf) => {
+                        console.log('resend request');
+                        req.headers.set('X-CSRFToken', csrf)
+                        return fetch(req)
+                    })
+
+                }
+
+                if (rsp.status == 401) {
+                    //location.reload(true)
+                }
+
+                const error = (data && data.message) || response.statusText
+                console.log('error', error);
+                return Promise.reject(error)
+
+            })
+
+        })
+
+    }
 
     token_obtain(data) {
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify(data),
-        }
-        return fetch('http://localhost:8101/api/token/obtain/', requestOptions).then(this.handleResponse)
+
+        const req = new Request(
+            this.base_url + '/api/token/obtain/',
+            {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': localStorage.getItem('auth_csrf_token'),
+                },
+                body: JSON.stringify(data),
+            }
+        )
+
+        return this.doRequest(req)
+
     }
 
 }
 
-const service = new Service()
+const service = new AuthService()
 
 
 class Login extends React.Component {

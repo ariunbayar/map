@@ -4,7 +4,7 @@ import secure.views
 
 
 urlpatterns = [
-    path('api/', include([
-        path('token/obtain/', secure.views.token_obtain),
-    ])),
+    path('login/', secure.views.login, name='login'),
+    path('logout/', secure.views.logout, name='logout'),
+    path('token/', secure.views.token, name='token'),
 ]
