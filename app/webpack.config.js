@@ -48,7 +48,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {
-            '@': path.resolve(__dirname),
+            '@': path.resolve(__dirname, 'page/frontend/'),
         }
     }
 }

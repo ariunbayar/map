@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {BrowserRouter, Switch, Route, Link} from "react-router-dom";
 
-import LoginPage from "./login_page"
-import ConfigPage from "./config_page"
-import HomePage from "./home_page"
+import LoginPage from "./LoginPage"
+import ConfigPage from "./ConfigPage"
+import HomePage from "./HomePage"
 
 
 export default class App extends Component {
