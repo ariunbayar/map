@@ -10,4 +10,3 @@ auth/main/settings/dev.py
 auth/main/settings/prod.py
 geoproxy/main/settings/dev.py
 geoproxy/main/settings/prod.py
-app/db.sqlite3

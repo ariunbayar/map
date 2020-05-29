@@ -25,6 +25,7 @@ module.exports = {
             {
                 // regex test for js and jsx files
                 test: /\.(js|jsx)?$/,
+                include: path.resolve(__dirname, 'page/frontend/'),
                 // don't look in the node_modules/ folder
                 exclude: /node_modules/,
                 // for matching files, use the babel-loader
@@ -50,5 +51,6 @@ module.exports = {
         alias: {
             '@': path.resolve(__dirname, 'page/frontend/'),
         }
-    }
+    },
+    watch: true,
 }
