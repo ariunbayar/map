@@ -3,10 +3,13 @@
 <html>
 <head>
     <title>Map</title>
+    <link rel="stylesheet" href="{% static "main.css" %}">
     <link rel="icon" href="{% static "images/favicon.ico" %}" type="image/x-icon">
 </head>
 <body>
-
+	<ul class="menu">
+		<li> <a href="{% url "wms:list" %}"> WMS </a></li>
+	</ul>
     <div class="container">
         {% block content %}{% endblock %}
     </div>

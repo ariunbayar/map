@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'secure.apps.SecureConfig',
     'mapview.apps.MapviewConfig',
     'config.apps.ConfigConfig',
+    'wms.apps.WmsConfig',
 ]
 
 MIDDLEWARE = [
