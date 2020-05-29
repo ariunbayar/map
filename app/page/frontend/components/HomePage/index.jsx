@@ -12,12 +12,24 @@ export default class HomePage extends Component {
     constructor(props) {
         super(props)
 
-        const tile_layer_wms = new TileLayer({
+
+
+        const tile_layer_wms1 = new TileLayer({
                     source: new TileWMS({
                         projection: 'EPSG:3857',
                         url: 'http://qgis.20k.mn:8080/cgi-bin/qgis_mapserv.fcgi',
                         params: {
-                            'LAYERS': 'airports,places,countries'
+                            'LAYERS': 'countries,airports,places'
+                        }
+                    }),
+                })
+
+        const tile_layer_wms2 = new TileLayer({
+                    source: new TileWMS({
+                        projection: 'EPSG:3857',
+                        url: 'https://geoserver.egazar.gov.mn:8443/geoserver/geoware/wms',
+                        params: {
+                            'LAYERS': 'countries,airports,places'
                         }
                     }),
                 })
@@ -31,7 +43,8 @@ export default class HomePage extends Component {
         this.state = {
             layers: [
                 tile_layer_osm,
-                tile_layer_wms,
+                tile_layer_wms1,
+                tile_layer_wms2,
             ],
         }
 
@@ -64,6 +77,7 @@ export default class HomePage extends Component {
 
                 <input type="button" value="toggle 0" onClick={() => this.handleToggle(0)}/>
                 <input type="button" value="toggle 1" onClick={() => this.handleToggle(1)}/>
+                <input type="button" value="toggle 2" onClick={() => this.handleToggle(2)}/>
                 <div id="map" style={{width: '100%', height: '600px'}}></div>
             </div>
         )
