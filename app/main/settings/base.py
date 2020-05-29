@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     'mapview.apps.MapviewConfig',
     'config.apps.ConfigConfig',
     'wms.apps.WmsConfig',
+    'wmslayer.apps.WmslayerConfig',
+    'bundle.apps.BundleConfig',
 ]
 
 MIDDLEWARE = [
