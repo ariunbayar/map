@@ -37,6 +37,7 @@ def create(request):
 
     data = json.loads(request.body)
 
+    print(data)
     form = WMSForm(data)
 
     if form.is_valid():
@@ -56,6 +57,7 @@ def update(request, payload):
     layers = payload.get('layers')
     layer_choices = payload.get('layer_choices')
     form = WMSForm(payload, instance=wms)
+    print(payload)
 
     if form.is_valid():
 
