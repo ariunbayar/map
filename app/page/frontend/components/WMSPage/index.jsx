@@ -2,6 +2,7 @@ import React, { Component } from "react"
 
 import {service} from './service'
 import WMSForm from './WMSForm'
+import WMS from './WMS'
 
 
 export default class WMSPage extends Component {
@@ -11,14 +12,23 @@ export default class WMSPage extends Component {
 
         super(props)
 
+        this.initial_form_values = {
+            id: null,
+            name: '',
+            url: '',
+        }
+
         this.state = {
             is_form_open: false,
             wms_list: [],
+            form_values: {...this.initial_form_values},
         }
 
         this.handleSaveSuccess = this.handleSaveSuccess.bind(this)
-        this.handleFormSave = this.handleFormSave.bind(this)
+        this.handleSave = this.handleSave.bind(this)
         this.handleListUpdated = this.handleListUpdated.bind(this)
+        this.handleEdit = this.handleEdit.bind(this)
+        this.handleAdd = this.handleAdd.bind(this)
 
     }
 
@@ -29,7 +39,6 @@ export default class WMSPage extends Component {
     handleListUpdated() {
 
         service.getAll().then(({wms_list}) => {
-            console.log(wms_list);
             this.setState({wms_list})
         })
 
@@ -40,7 +49,7 @@ export default class WMSPage extends Component {
         this.setState({is_form_open: false})
     }
 
-    handleFormSave(values) {
+    handleSave(values) {
 
         if (values.id) {
 
@@ -64,6 +73,15 @@ export default class WMSPage extends Component {
         })
     }
 
+    handleEdit(form_values) {
+        this.setState({form_values, is_form_open: true})
+    }
+
+    handleAdd() {
+        const form_values = this.initial_form_values
+        this.setState({form_values, is_form_open: true})
+    }
+
     render() {
         return (
             <div>
@@ -80,22 +98,24 @@ export default class WMSPage extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.wms_list.map(({id, name, url, created_at}) =>
-                            <tr key={id}>
-                                <td><a onClick={() => 1}>{name}</a></td>
-                                <td>{url}</td>
-                                <td></td>
-                                <td>{created_at}</td>
-                                <td><a href="#" onClick={() => this.handleRemove(id)}>x</a></td>
-                            </tr>
+                        {this.state.wms_list.map((values) =>
+                            <WMS
+                                key={values.id}
+                                values={values}
+                                handleRemove={() => this.handleRemove(values.id)}
+                                handleEdit={() => this.handleEdit(values)}
+                            />
                         )}
                     </tbody>
                 </table>
 
-                <button onClick={() => this.setState({is_form_open: true})}>Нэмэх</button>
+                <button onClick={this.handleAdd}>Нэмэх</button>
 
                 {this.state.is_form_open &&
-                    <WMSForm handleSave={this.handleFormSave}/>
+                    <WMSForm
+                        handleSave={this.handleSave}
+                        values={this.state.form_values}
+                    />
                 }
 
             </div>

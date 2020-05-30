@@ -9,12 +9,22 @@ export default class WMSForm extends Component {
         super(props)
 
         this.state = {
-            name: '',
-            url: '',
+            id: props.values.id,
+            name: props.values.name,
+            url: props.values.url,
         }
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSave = this.handleSave.bind(this)
+
+    }
+
+    componentDidUpdate(prevProps) {
+
+        if (this.props.values.id !== prevProps.values.id) {
+            const {id, name, url} = this.props.values
+            this.setState({id, name, url})
+        }
 
     }
 
@@ -32,12 +42,12 @@ export default class WMSForm extends Component {
                 <dl>
                     <dt> Нэр: </dt>
                     <dd>
-                        <input type="text" onChange={(e) => this.handleChange('name', e)}/>
+                        <input type="text" onChange={(e) => this.handleChange('name', e)} value={this.state.name}/>
                     </dd>
 
                     <dt> WMS URL: </dt>
                     <dd>
-                        <input type="text" onChange={(e) => this.handleChange('url', e)}/>
+                        <input type="text" onChange={(e) => this.handleChange('url', e)} value={this.state.url}/>
                     </dd>
 
                     <dt></dt>

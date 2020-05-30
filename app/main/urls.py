@@ -40,7 +40,7 @@ urlpatterns = [
         [
             path('list/', wms.views.all),
             path('create/', wms.views.create),
-            path('<int:pk>/edit/', wms.views.edit, name='edit'),
+            path('update/', wms.views.update),
             path('delete/', wms.views.delete),
         ],
         'wms'

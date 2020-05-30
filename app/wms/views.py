@@ -1,8 +1,10 @@
 import json
 
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_GET
+
+from main.decorators import ajax_required
 
 from .models import WMS
 from .forms import WMSForm
@@ -42,35 +44,25 @@ def create(request):
         return JsonResponse({'success': False})
 
 
-def edit(request, pk):
+@require_POST
+@ajax_required
+def update(request, payload):
+    wms = get_object_or_404(WMS, pk=payload.get('id'))
+    form = WMSForm(payload, instance=wms)
 
-    wms = WMS.objects.get(pk=pk)
-
-    if request.method == 'POST':
-
-        form = WMSForm(request.POST, instance=wms)
-
-        if form.is_valid():
-            form.save()
-            return redirect('wms:list')
+    if form.is_valid():
+        form.save()
+        return JsonResponse({
+                'wms': _get_wms_display(form.instance),
+                'success': True
+            })
     else:
-
-        form = WMSForm(instance=wms)
-
-    context = {
-            'form': form,
-        }
-
-    return render(request, 'wms/form.html', context)
+        return JsonResponse({'success': False})
 
 
-def delete(request):
-    try:
-        data = json.loads(request.body)
-        WMS.objects.get(pk=data.get('id')).delete()
-    except:
-        rsp = {'success': False}
-    else:
-        rsp = {'success': True}
-
-    return JsonResponse(rsp)
+@require_POST
+@ajax_required
+def delete(request, payload):
+    wms = get_object_or_404(WMS, pk=payload.get('id'))
+    wms.delete()
+    return JsonResponse({'success': True})
