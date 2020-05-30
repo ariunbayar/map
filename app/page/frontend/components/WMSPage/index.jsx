@@ -90,7 +90,7 @@ export default class WMSPage extends Component {
                         <tr>
                             <td> Нэр </td>
                             <td> Url </td>
-                            <td></td>
+                            <td> Public WMS </td>
                             <td> Огноо</td>
                             <td></td>
                         </tr>

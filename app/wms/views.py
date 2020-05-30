@@ -20,6 +20,7 @@ def _get_wms_display(wms):
         'id': wms.id,
         'name': wms.name,
         'url': wms.url,
+        'public_url': 'http://localhost:8101/WMS/{}/'.format(wms.pk),
         'created_at': wms.created_at.strftime('%Y-%m-%d'),
     }
 

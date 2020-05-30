@@ -4,7 +4,7 @@ import React, { Component } from "react"
 export default class WMS extends Component {
 
     render() {
-        const {id, name, url, created_at} = this.props.values
+        const {id, name, url, public_url, created_at} = this.props.values
         return (
             <tr>
                 <td>
@@ -16,6 +16,7 @@ export default class WMS extends Component {
                     {url}
                 </td>
                 <td>
+                    {public_url}
                 </td>
                 <td>
                     {created_at}

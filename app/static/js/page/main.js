@@ -92468,7 +92468,7 @@ var HomePage = /*#__PURE__*/function (_Component) {
     var tile_layer_wms1 = new ol_layer_Tile__WEBPACK_IMPORTED_MODULE_3__["default"]({
       source: new ol_source_TileWMS__WEBPACK_IMPORTED_MODULE_4__["default"]({
         projection: 'EPSG:3857',
-        url: 'http://qgis.20k.mn:8080/cgi-bin/qgis_mapserv.fcgi',
+        url: 'http://localhost:8102/WMS/1/',
         params: {
           'LAYERS': 'countries,airports,places'
         }
@@ -92477,9 +92477,8 @@ var HomePage = /*#__PURE__*/function (_Component) {
     var tile_layer_wms2 = new ol_layer_Tile__WEBPACK_IMPORTED_MODULE_3__["default"]({
       source: new ol_source_TileWMS__WEBPACK_IMPORTED_MODULE_4__["default"]({
         projection: 'EPSG:3857',
-        url: 'https://geoserver.egazar.gov.mn:8443/geoserver/geoware/wms',
-        params: {
-          'LAYERS': 'countries,airports,places'
+        url: 'http://localhost:8102/WMS/18/',
+        params: {//'LAYERS': 'countries,airports,places'
         }
       })
     });
@@ -92669,11 +92668,12 @@ var WMS = /*#__PURE__*/function (_Component) {
           id = _this$props$values.id,
           name = _this$props$values.name,
           url = _this$props$values.url,
+          public_url = _this$props$values.public_url,
           created_at = _this$props$values.created_at;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: this.props.handleEdit
-      }, name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, url), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, created_at), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, url), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, public_url), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, created_at), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: this.props.handleRemove
       }, "remove")));
@@ -92955,7 +92955,7 @@ var WMSPage = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this5 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041D\u044D\u0440 "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " Url "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041E\u0433\u043D\u043E\u043E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.state.wms_list.map(function (values) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041D\u044D\u0440 "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " Url "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " Public WMS "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041E\u0433\u043D\u043E\u043E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.state.wms_list.map(function (values) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_WMS__WEBPACK_IMPORTED_MODULE_3__["default"], {
           key: values.id,
           values: values,
