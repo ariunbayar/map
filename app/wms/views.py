@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from wms.models import WMS
+from bundle.models import Bundle, BundleLayer
+from wmslayer.models import WMSLayer
 from wms.forms import WMSForm
 
 
@@ -56,4 +58,12 @@ def edit(request, pk):
 
 
 def delete(request, pk):
-    pass
+    wms = WMS.objects.get(pk=pk)
+    layers = WMSLayer.objects.filter(wms=wms)
+    for layer in layers:
+        BundleLayer.objects.filter(layer=layer).delete()
+        layer.delete()
+
+    wms.delete()
+
+    return redirect('wms:list')

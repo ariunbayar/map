@@ -8,6 +8,7 @@
             <td> Url </td>
             <td> Үүсгэсэн хэрэглэгч </td>
             <td> Үүсгэсэн огноо </td>
+            <td> </td>
         </tr>
     </thead>
     <tbody>
@@ -17,6 +18,7 @@
             <td>{{ wms.url }}</td>
             <td></td>
             <td>{{ wms.created_at.date }}</td>
+            <td><a href="{% url "wms:delete" wms.pk %}">утгах</a></td>
         </tr>
         {% endfor %}
     </tbody>

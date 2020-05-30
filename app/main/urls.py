@@ -4,6 +4,7 @@ import page.views
 import secure.views
 import mapview.views
 import wms.views
+import bundle.views
 
 
 urlpatterns = [
@@ -44,6 +45,16 @@ urlpatterns = [
             path('<int:pk>/delete/', wms.views.delete, name='delete'),
         ],
         'wms'
-    )))
+    ))),
+
+    path('bundle/', include((
+        [
+            path('list/', bundle.views.list, name='list'),
+            path('add/', bundle.views.add, name='add'),
+            path('<int:pk>/edit/', bundle.views.edit, name='edit'),
+            path('<int:pk>/delete/', bundle.views.delete, name='delete'),
+        ],
+        'bundle'
+    ))),
 
 ]
