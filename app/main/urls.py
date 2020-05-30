@@ -49,10 +49,10 @@ urlpatterns = [
 
     path('bundle/', include((
         [
-            path('list/', bundle.views.list, name='list'),
-            path('add/', bundle.views.add, name='add'),
-            path('<int:pk>/edit/', bundle.views.edit, name='edit'),
-            path('<int:pk>/delete/', bundle.views.delete, name='delete'),
+            path('all/', bundle.views.all),
+            path('create/', bundle.views.create),
+            path('<int:pk>/update/', bundle.views.update),
+            path('<int:pk>/remove/', bundle.views.remove),
         ],
         'bundle'
     ))),

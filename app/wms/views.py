@@ -37,6 +37,7 @@ def create(request):
 
     data = json.loads(request.body)
 
+    print(data)
     form = WMSForm(data)
 
     if form.is_valid():
@@ -54,6 +55,7 @@ def create(request):
 def update(request, payload):
     wms = get_object_or_404(WMS, pk=payload.get('id'))
     form = WMSForm(payload, instance=wms)
+    print(payload)
 
     if form.is_valid():
         form.save()

@@ -1,62 +1,103 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.http import require_POST, require_GET
+from django.http import JsonResponse
+import json
+
 from bundle.models import Bundle, BundleLayer
+from wms.models import WMS
+from wmslayer.models import WMSLayer
 from bundle.forms import BundleForm
 
 
-# Create your views here.
-def list(request):
-    bundle_list = Bundle.objects.all()
+def _get_bundle_options():
 
-    context = {
-            'bundle_list': bundle_list,
-        }
+    form_options = []
 
-    return render(request, 'bundle/list.html', context)
+    for wms in WMS.objects.all():
+        layers = [{'id':layer.id, 'name':layer.name} for layer in WMSLayer.objects.filter(wms=wms)]
+        form_options.append({
+            'wms': wms.name,
+            'layers':layers,
+            })
+
+    return form_options
 
 
-def add(request):
-    if request.method == 'POST':
+def _get_bundle_update(bundle):
 
-        form = BundleForm(request.POST)
+    bundle_data = []
+    layers = [(layer.id) for layer in BundleLayer.objects.filter(bundle=bundle)]
+    bundle_data.append({
+        'id': bundle.id,
+        'name': bundle.name,
+        'price': bundle.price,
+        'layers':layers,
+        })
 
-        if form.is_valid():
-            form.instance.is_removeable = True 
-            form.save()
-            return redirect('bundle:list')
+    return bundle_data
 
+
+@require_GET
+def all(request):
+    bundle_list = []
+
+    for bundle in Bundle.objects.all():
+        wms_service = [( WMS.objects.get(pk=wms[0]).name ) for wms in BundleLayer.objects.filter(bundle=bundle).values_list('layer__wms_id').distinct()]
+        
+        bundle_list.append({
+            'id': bundle.id,
+            'name': bundle.name,
+            'price': bundle.price,
+            'wms_service': wms_service
+        })
+
+    return JsonResponse({'bundle_list': bundle_list})
+
+
+@require_POST
+def create(request):
+
+    data = json.loads(request.body)
+    form = BundleForm(data)
+    if form.is_valid():
+        form.instance.is_removeable = True 
+        form.save()
+        return JsonResponse({
+                'success': True
+            })
     else:
-
-        form = BundleForm()
-
-    context = {
-            'form': form
-        }
-    return render(request, 'bundle/form.html', context)
+        return JsonResponse({
+            'form_options': _get_bundle_options(),
+            'success': False
+            })
 
 
-def edit(request, pk):
-
+@require_POST
+def update(request, pk):
     bundle = Bundle.objects.get(pk=pk)
 
-    if request.method == 'POST':
+    data = json.loads(request.body)
+    form = BundleForm(data, instance=bundle)
 
-        form = BundleForm(request.POST, instance=bundle)
-
-        if form.is_valid():
-            form.save()
-            return redirect('bundle:list')
+    if form.is_valid():
+        form.save()
+        return JsonResponse({
+                'success': True
+            })
     else:
 
-        form = BundleForm(instance=bundle)
-
-    context = {
-            'form': form,
-        }
-
-    return render(request, 'bundle/form.html', context)
+        return JsonResponse({
+            'form_options': _get_bundle_options(),
+            'bundle_json': _get_bundle_update(bundle),
+            'success': False
+            })
 
 
-def delete(request, pk):
+@require_POST
+def remove(request, pk):
+
     BundleLayer.objects.filter(bundle=pk).delete()
     Bundle.objects.get(pk=pk).delete()
-    return redirect('bundle:list')
+    return JsonResponse({
+                    'success': True
+                })
