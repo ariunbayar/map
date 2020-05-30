@@ -20,6 +20,7 @@ def _get_wms_display(wms):
         'id': wms.id,
         'name': wms.name,
         'url': wms.url,
+        'public_url': 'http://localhost:8102/WMS/{}/'.format(wms.pk),
         'created_at': wms.created_at.strftime('%Y-%m-%d'),
     }
 
@@ -79,3 +80,14 @@ def delete(request, payload):
     wms.delete()
 
     return JsonResponse({'success': True})
+
+
+@require_GET
+@ajax_required
+def api_url(request, pk):
+    wms = get_object_or_404(WMS, pk=pk)
+    rsp = {
+            'url': wms.url,
+            'success': True
+        }
+    return JsonResponse(rsp)

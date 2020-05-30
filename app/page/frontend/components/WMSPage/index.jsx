@@ -85,14 +85,12 @@ export default class WMSPage extends Component {
     render() {
         return (
             <div>
-                <p>Login page</p>
-
                 <table>
                     <thead>
                         <tr>
                             <td> Нэр </td>
                             <td> Url </td>
-                            <td></td>
+                            <td> Endpoint </td>
                             <td> Огноо</td>
                             <td></td>
                         </tr>

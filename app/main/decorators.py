@@ -14,10 +14,12 @@ def ajax_required(f):
             try:
                 payload = json.loads(request.body)
             except:
-                return HttpResponseBadRequest('{"success": false}')
+                pass
+            else:
+                args = [payload, *args]
 
             try:
-                return f(request, payload, *args, **kwargs)
+                return f(request, *args, **kwargs)
             except Http404:
                 return HttpResponseBadRequest('{"success": false}')
 

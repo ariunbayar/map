@@ -17,7 +17,7 @@ export default class HomePage extends Component {
         const tile_layer_wms1 = new TileLayer({
                     source: new TileWMS({
                         projection: 'EPSG:3857',
-                        url: 'http://qgis.20k.mn:8080/cgi-bin/qgis_mapserv.fcgi',
+                        url: 'http://localhost:8102/WMS/1/',
                         params: {
                             'LAYERS': 'countries,airports,places'
                         }
@@ -27,9 +27,9 @@ export default class HomePage extends Component {
         const tile_layer_wms2 = new TileLayer({
                     source: new TileWMS({
                         projection: 'EPSG:3857',
-                        url: 'https://geoserver.egazar.gov.mn:8443/geoserver/geoware/wms',
+                        url: 'http://localhost:8102/WMS/18/',
                         params: {
-                            'LAYERS': 'countries,airports,places'
+                            //'LAYERS': 'countries,airports,places'
                         }
                     }),
                 })

@@ -92189,7 +92189,7 @@ var App = /*#__PURE__*/function (_Component) {
         to: "/p/login/"
       }, "\u041D\u044D\u0432\u0442\u0440\u044D\u0445"), "\xA0|\xA0", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         onClick: this.handleLogout
-      }, "\u0413\u0430\u0440\u0430\u0445")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Homepage"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+      }, "\u0413\u0430\u0440\u0430\u0445")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
         exact: true,
         path: "/p/login/",
         component: _LoginPage__WEBPACK_IMPORTED_MODULE_2__["default"]
@@ -92468,7 +92468,7 @@ var HomePage = /*#__PURE__*/function (_Component) {
     var tile_layer_wms1 = new ol_layer_Tile__WEBPACK_IMPORTED_MODULE_3__["default"]({
       source: new ol_source_TileWMS__WEBPACK_IMPORTED_MODULE_4__["default"]({
         projection: 'EPSG:3857',
-        url: 'http://qgis.20k.mn:8080/cgi-bin/qgis_mapserv.fcgi',
+        url: 'http://localhost:8102/WMS/1/',
         params: {
           'LAYERS': 'countries,airports,places'
         }
@@ -92477,9 +92477,8 @@ var HomePage = /*#__PURE__*/function (_Component) {
     var tile_layer_wms2 = new ol_layer_Tile__WEBPACK_IMPORTED_MODULE_3__["default"]({
       source: new ol_source_TileWMS__WEBPACK_IMPORTED_MODULE_4__["default"]({
         projection: 'EPSG:3857',
-        url: 'https://geoserver.egazar.gov.mn:8443/geoserver/geoware/wms',
-        params: {
-          'LAYERS': 'countries,airports,places'
+        url: 'http://localhost:8102/WMS/18/',
+        params: {//'LAYERS': 'countries,airports,places'
         }
       })
     });
@@ -92615,6 +92614,59 @@ var LoginPage = /*#__PURE__*/function (_Component) {
 
 /***/ }),
 
+/***/ "./page/frontend/components/WMSPage/Capabilities.js":
+/*!**********************************************************!*\
+  !*** ./page/frontend/components/WMSPage/Capabilities.js ***!
+  \**********************************************************/
+/*! exports provided: Capabilities */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Capabilities", function() { return Capabilities; });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Capabilities = /*#__PURE__*/function () {
+  function Capabilities(xml_raw) {
+    _classCallCheck(this, Capabilities);
+
+    this.xml = new DOMParser().parseFromString(xml_raw, "text/xml");
+  }
+
+  _createClass(Capabilities, [{
+    key: "getLayers",
+    value: function getLayers() {
+      var nodes = this.xml.querySelectorAll('WMS_Capabilities > Capability Layer');
+      return _toConsumableArray(nodes).map(function (layer) {
+        return {
+          name: layer.querySelector('Title').innerHTML,
+          code: layer.querySelector('Name').innerHTML
+        };
+      });
+    }
+  }]);
+
+  return Capabilities;
+}();
+
+/***/ }),
+
 /***/ "./page/frontend/components/WMSPage/WMS.jsx":
 /*!**************************************************!*\
   !*** ./page/frontend/components/WMSPage/WMS.jsx ***!
@@ -92669,11 +92721,12 @@ var WMS = /*#__PURE__*/function (_Component) {
           id = _this$props$values.id,
           name = _this$props$values.name,
           url = _this$props$values.url,
+          public_url = _this$props$values.public_url,
           created_at = _this$props$values.created_at;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: this.props.handleEdit
-      }, name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, url), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, created_at), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, name)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, url), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, public_url), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, created_at), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: this.props.handleRemove
       }, "remove")));
@@ -92699,6 +92752,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return WMSForm; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./service */ "./page/frontend/components/WMSPage/service.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -92725,6 +92779,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var WMSForm = /*#__PURE__*/function (_Component) {
   _inherits(WMSForm, _Component);
 
@@ -92739,27 +92794,51 @@ var WMSForm = /*#__PURE__*/function (_Component) {
     _this.state = {
       id: props.values.id,
       name: props.values.name,
-      url: props.values.url
+      url: props.values.url,
+      public_url: props.values.public_url,
+      layer_choices: []
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_this));
+    _this.loadLayers = _this.loadLayers.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(WMSForm, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.state.id && this.loadLayers(this.state.public_url);
+    }
+  }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.values.id !== prevProps.values.id) {
         var _this$props$values = this.props.values,
             id = _this$props$values.id,
             name = _this$props$values.name,
-            url = _this$props$values.url;
+            url = _this$props$values.url,
+            public_url = _this$props$values.public_url;
+        console.log(public_url);
         this.setState({
           id: id,
           name: name,
-          url: url
+          url: url,
+          public_url: public_url,
+          layer_choices: []
         });
+        this.state.id && this.loadLayers(public_url);
       }
+    }
+  }, {
+    key: "loadLayers",
+    value: function loadLayers(public_url) {
+      var _this2 = this;
+
+      _service__WEBPACK_IMPORTED_MODULE_1__["service"].getLayers(public_url).then(function (layer_choices) {
+        _this2.setState({
+          layer_choices: layer_choices
+        });
+      });
     }
   }, {
     key: "handleChange",
@@ -92774,21 +92853,28 @@ var WMSForm = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dl", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null, " \u041D\u044D\u0440: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         onChange: function onChange(e) {
-          return _this2.handleChange('name', e);
+          return _this3.handleChange('name', e);
         },
         value: this.state.name
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null, " WMS URL: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         onChange: function onChange(e) {
-          return _this2.handleChange('url', e);
+          return _this3.handleChange('url', e);
         },
         value: this.state.url
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null, " Endpoint "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, this.state.id && this.state.public_url, !this.state.id && 'Хадгалсаны дараагаар Endpoint URL үүснэ!'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null, " \u0414\u0430\u0432\u0445\u0430\u0440\u0433\u0443\u0443\u0434 "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, this.state.id && this.state.layer_choices.map(function (layer, idx) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: idx
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          type: "checkbox",
+          value: layer.name
+        }), layer.name, " (", layer.code, ")"));
+      }), !this.state.id && 'Хадгалсаны дараагаар давхаргуудыг үзэх боломжтой болно'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleSave
       }, "\u0425\u0430\u0434\u0433\u0430\u043B"))));
     }
@@ -92955,7 +93041,7 @@ var WMSPage = /*#__PURE__*/function (_Component) {
     value: function render() {
       var _this5 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Login page"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041D\u044D\u0440 "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " Url "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041E\u0433\u043D\u043E\u043E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.state.wms_list.map(function (values) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041D\u044D\u0440 "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " Url "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " Endpoint "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, " \u041E\u0433\u043D\u043E\u043E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.state.wms_list.map(function (values) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_WMS__WEBPACK_IMPORTED_MODULE_3__["default"], {
           key: values.id,
           values: values,
@@ -92992,17 +93078,20 @@ var WMSPage = /*#__PURE__*/function (_Component) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "service", function() { return service; });
+/* harmony import */ var _Capabilities__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Capabilities */ "./page/frontend/components/WMSPage/Capabilities.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+
 var service = {
   getAll: getAll,
   create: create,
   update: update,
-  remove: remove
+  remove: remove,
+  getLayers: getLayers
 };
 
 function getCookie(name) {
@@ -93083,6 +93172,27 @@ function remove(id) {
   });
 
   return fetch('/wms/delete/', opts).then(handleResponse);
+}
+
+function getLayers(wms_url) {
+  return new Promise(function (resolve, reject) {
+    var requestOptions = {
+      method: 'GET'
+    };
+    var url = wms_url + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities';
+    fetch(url, requestOptions).then(function (rsp) {
+      return rsp.blob();
+    }).then(function (data) {
+      var reader = new FileReader();
+
+      reader.onloadend = function () {
+        var layers = new _Capabilities__WEBPACK_IMPORTED_MODULE_0__["Capabilities"](reader.result).getLayers();
+        resolve(layers);
+      };
+
+      reader.readAsText(data);
+    })["catch"](reject);
+  });
 }
 
 /***/ }),

@@ -1,8 +1,12 @@
+import {Capabilities} from "./Capabilities"
+
+
 export const service = {
     getAll,
     create,
     update,
     remove,
+    getLayers,
 }
 
 function getCookie(name) {
@@ -81,4 +85,29 @@ function remove(id) {
     }
 
     return fetch('/wms/delete/', opts).then(handleResponse)
+}
+
+
+function getLayers(wms_url) {
+
+    return new Promise((resolve, reject) => {
+
+        const requestOptions = {
+            method: 'GET',
+        }
+
+        const url = wms_url + '?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities'
+
+        fetch(url, requestOptions)
+            .then(rsp => rsp.blob())
+            .then(data => {
+                const reader = new FileReader()
+                reader.onloadend = () => {
+                    const layers = (new Capabilities(reader.result)).getLayers()
+                    resolve(layers)
+                }
+                reader.readAsText(data)
+            })
+            .catch(reject)
+    })
 }
