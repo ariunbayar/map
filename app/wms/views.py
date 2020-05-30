@@ -3,62 +3,72 @@ from wms.models import WMS
 from bundle.models import Bundle, BundleLayer
 from wmslayer.models import WMSLayer
 from wms.forms import WMSForm
+import json
+
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST, require_GET
+
+from main.decorators import ajax_required
+
+from .models import WMS
+from .forms import WMSForm
 
 
-# Create your views here.
-def list(request):
-    wms_list = WMS.objects.all()
-
-    context = {
-            'wms_list': wms_list,
-        }
-
-    return render(request, 'wms/list.html', context)
+def _get_wms_display(wms):
+    return {
+        'id': wms.id,
+        'name': wms.name,
+        'url': wms.url,
+        'created_at': wms.created_at.strftime('%Y-%m-%d'),
+    }
 
 
-def add(request):
-    if request.method == 'POST':
+@require_GET
+def all(request):
 
-        form = WMSForm(request.POST)
+    wms_list = [_get_wms_display(ob) for ob in WMS.objects.all()]
 
-        if form.is_valid():
-            form.save()
-            return redirect('wms:list')
+    return JsonResponse({'wms_list': wms_list})
 
+
+@require_POST
+def create(request):
+
+    data = json.loads(request.body)
+
+    form = WMSForm(data)
+
+    if form.is_valid():
+        form.save()
+        return JsonResponse({
+                'wms': _get_wms_display(form.instance),
+                'success': True
+            })
     else:
-
-        form = WMSForm()
-
-    context = {
-            'form': form
-        }
-    return render(request, 'wms/form.html', context)
+        return JsonResponse({'success': False})
 
 
-def edit(request, pk):
+@require_POST
+@ajax_required
+def update(request, payload):
+    wms = get_object_or_404(WMS, pk=payload.get('id'))
+    form = WMSForm(payload, instance=wms)
 
-    wms = WMS.objects.get(pk=pk)
-
-    if request.method == 'POST':
-
-        form = WMSForm(request.POST, instance=wms)
-
-        if form.is_valid():
-            form.save()
-            return redirect('wms:list')
+    if form.is_valid():
+        form.save()
+        return JsonResponse({
+                'wms': _get_wms_display(form.instance),
+                'success': True
+            })
     else:
-
-        form = WMSForm(instance=wms)
-
-    context = {
-            'form': form,
-        }
-
-    return render(request, 'wms/form.html', context)
+        return JsonResponse({'success': False})
 
 
-def delete(request, pk):
-    wms = WMS.objects.get(pk=pk)
+@require_POST
+@ajax_required
+def delete(request, payload):
+    wms = get_object_or_404(WMS, pk=payload.get('id'))
     layers = WMSLayer.objects.filter(wms=wms)
     for layer in layers:
         BundleLayer.objects.filter(layer=layer).delete()
@@ -66,4 +76,4 @@ def delete(request, pk):
 
     wms.delete()
 
-    return redirect('wms:list')
+    return JsonResponse({'success': True})

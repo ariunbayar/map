@@ -10,7 +10,7 @@ import bundle.views
 urlpatterns = [
 
     path('', page.views.home, name='page-home'),
-    re_path('^p/', page.views.home, name='page-home'),
+    re_path('^p/', page.views.home),
 
     path('WMS/', page.views.wms, name='page-wms'),
 
@@ -28,7 +28,7 @@ urlpatterns = [
 
 
     path('', include((
-        
+
         [
             path('login/', secure.views.login, name='login'),
             path('logout/', secure.views.logout, name='logout'),
@@ -39,10 +39,10 @@ urlpatterns = [
 
     path('wms/', include((
         [
-            path('list/', wms.views.list, name='list'),
-            path('add/', wms.views.add, name='add'),
-            path('<int:pk>/edit/', wms.views.edit, name='edit'),
-            path('<int:pk>/delete/', wms.views.delete, name='delete'),
+            path('list/', wms.views.all),
+            path('create/', wms.views.create),
+            path('update/', wms.views.update),
+            path('delete/', wms.views.delete),
         ],
         'wms'
     ))),
