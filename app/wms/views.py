@@ -1,3 +1,8 @@
+from django.shortcuts import render, redirect
+from wms.models import WMS
+from bundle.models import Bundle, BundleLayer
+from wmslayer.models import WMSLayer
+from wms.forms import WMSForm
 import json
 
 from django.http import JsonResponse
@@ -64,5 +69,11 @@ def update(request, payload):
 @ajax_required
 def delete(request, payload):
     wms = get_object_or_404(WMS, pk=payload.get('id'))
+    layers = WMSLayer.objects.filter(wms=wms)
+    for layer in layers:
+        BundleLayer.objects.filter(layer=layer).delete()
+        layer.delete()
+
     wms.delete()
+
     return JsonResponse({'success': True})
