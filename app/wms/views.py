@@ -77,3 +77,14 @@ def delete(request, payload):
     wms.delete()
 
     return JsonResponse({'success': True})
+
+
+@require_GET
+@ajax_required
+def api_url(request, pk):
+    wms = get_object_or_404(WMS, pk=pk)
+    rsp = {
+            'url': wms.url,
+            'success': True
+        }
+    return JsonResponse(rsp)

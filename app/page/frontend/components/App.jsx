@@ -35,7 +35,6 @@ export default class App extends Component {
                     <a onClick={this.handleLogout}>Гарах</a>
                 </nav>
                 <main>
-                    <h1>Homepage</h1>
                     <Switch>
                         <Route exact path={"/p/login/"} component={LoginPage}/>
                         <Route exact path={"/p/wms/"} component={WMSPage}/>

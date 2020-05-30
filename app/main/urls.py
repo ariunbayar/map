@@ -57,4 +57,11 @@ urlpatterns = [
         'bundle'
     ))),
 
+    path('api/wms/', include((
+        [
+            path('<int:pk>/url/', wms.views.api_url),
+        ],
+        'api-wms'
+    ))),
+
 ]
