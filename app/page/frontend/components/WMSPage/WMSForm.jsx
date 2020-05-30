@@ -13,11 +13,13 @@ export default class WMSForm extends Component {
             name: props.values.name,
             url: props.values.url,
             public_url: props.values.public_url,
+            layers: props.values.layers,
             layer_choices: [],
         }
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSave = this.handleSave.bind(this)
+        this.handleLayerToggle = this.handleLayerToggle.bind(this)
         this.loadLayers = this.loadLayers.bind(this)
 
     }
@@ -30,9 +32,8 @@ export default class WMSForm extends Component {
     componentDidUpdate(prevProps) {
 
         if (this.props.values.id !== prevProps.values.id) {
-            const {id, name, url, public_url} = this.props.values
-            console.log(public_url);
-            this.setState({id, name, url, public_url, layer_choices: []})
+            const {id, name, url, public_url, layers} = this.props.values
+            this.setState({id, name, url, public_url, layers, layer_choices: []})
 
             this.state.id && this.loadLayers(public_url)
         }
@@ -52,6 +53,17 @@ export default class WMSForm extends Component {
 
     handleSave() {
         this.props.handleSave(this.state)
+    }
+
+    handleLayerToggle(e) {
+        let layers = this.state.layers
+
+        if (e.target.checked) {
+            layers.push(e.target.value)
+        } else {
+            layers = layers.filter((layer) => layer != e.target.value)
+        }
+        this.setState({layers})
     }
 
     render() {
@@ -79,7 +91,12 @@ export default class WMSForm extends Component {
                         {this.state.id && this.state.layer_choices.map((layer, idx) =>
                             <div key={idx}>
                                 <label>
-                                    <input type="checkbox" value={layer.name}/>
+                                    <input
+                                        type="checkbox"
+                                        checked={this.state.layers.indexOf(layer.code) > -1}
+                                        onChange={this.handleLayerToggle}
+                                        value={layer.code}
+                                    />
                                     {layer.name} ({layer.code})
                                 </label>
                             </div>

@@ -92796,10 +92796,12 @@ var WMSForm = /*#__PURE__*/function (_Component) {
       name: props.values.name,
       url: props.values.url,
       public_url: props.values.public_url,
+      layers: props.values.layers,
       layer_choices: []
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSave = _this.handleSave.bind(_assertThisInitialized(_this));
+    _this.handleLayerToggle = _this.handleLayerToggle.bind(_assertThisInitialized(_this));
     _this.loadLayers = _this.loadLayers.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -92817,13 +92819,14 @@ var WMSForm = /*#__PURE__*/function (_Component) {
             id = _this$props$values.id,
             name = _this$props$values.name,
             url = _this$props$values.url,
-            public_url = _this$props$values.public_url;
-        console.log(public_url);
+            public_url = _this$props$values.public_url,
+            layers = _this$props$values.layers;
         this.setState({
           id: id,
           name: name,
           url: url,
           public_url: public_url,
+          layers: layers,
           layer_choices: []
         });
         this.state.id && this.loadLayers(public_url);
@@ -92851,6 +92854,23 @@ var WMSForm = /*#__PURE__*/function (_Component) {
       this.props.handleSave(this.state);
     }
   }, {
+    key: "handleLayerToggle",
+    value: function handleLayerToggle(e) {
+      var layers = this.state.layers;
+
+      if (e.target.checked) {
+        layers.push(e.target.value);
+      } else {
+        layers = layers.filter(function (layer) {
+          return layer != e.target.value;
+        });
+      }
+
+      this.setState({
+        layers: layers
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this3 = this;
@@ -92872,7 +92892,9 @@ var WMSForm = /*#__PURE__*/function (_Component) {
           key: idx
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "checkbox",
-          value: layer.name
+          checked: _this3.state.layers.indexOf(layer.code) > -1,
+          onChange: _this3.handleLayerToggle,
+          value: layer.code
         }), layer.name, " (", layer.code, ")"));
       }), !this.state.id && 'Хадгалсаны дараагаар давхаргуудыг үзэх боломжтой болно'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dt", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("dd", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleSave

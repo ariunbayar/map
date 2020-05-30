@@ -1,15 +1,13 @@
-from django.shortcuts import render, redirect
-from wms.models import WMS
-from bundle.models import Bundle, BundleLayer
-from wmslayer.models import WMSLayer
-from wms.forms import WMSForm
 import json
 
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST, require_GET
 
+from bundle.models import Bundle, BundleLayer
 from main.decorators import ajax_required
+from wmslayer.models import WMSLayer
 
 from .models import WMS
 from .forms import WMSForm
@@ -20,6 +18,7 @@ def _get_wms_display(wms):
         'id': wms.id,
         'name': wms.name,
         'url': wms.url,
+        'layers': [ob.code for ob in wms.wmslayer_set.all()],
         'public_url': 'http://localhost:8102/WMS/{}/'.format(wms.pk),
         'created_at': wms.created_at.strftime('%Y-%m-%d'),
     }
@@ -54,10 +53,29 @@ def create(request):
 @ajax_required
 def update(request, payload):
     wms = get_object_or_404(WMS, pk=payload.get('id'))
+    layers = payload.get('layers')
+    layer_choices = payload.get('layer_choices')
     form = WMSForm(payload, instance=wms)
 
     if form.is_valid():
-        form.save()
+
+        with transaction.atomic():
+
+            form.save()
+            wms = form.instance
+
+            # cleanup wms relations
+            BundleLayer.objects.filter(layer__wms_id=wms.pk).delete()
+            wms.wmslayer_set.all().delete()
+
+            for layer_choices in layer_choices:
+                if layer_choices.get('code') in layers:
+                    WMSLayer.objects.create(
+                        wms=form.instance,
+                        name=layer_choices.get('name'),
+                        code=layer_choices.get('code'),
+                    )
+
         return JsonResponse({
                 'wms': _get_wms_display(form.instance),
                 'success': True
