@@ -1,12 +1,15 @@
-from django.shortcuts import render, redirect
-from django.views.decorators.http import require_POST, require_GET
-from django.http import JsonResponse
 import json
 
-from bundle.models import Bundle, BundleLayer
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST, require_GET
+from django.http import JsonResponse
+
+from main.decorators import ajax_required
 from wms.models import WMS
 from wmslayer.models import WMSLayer
-from bundle.forms import BundleForm
+
+from .forms import BundleForm
+from .models import Bundle, BundleLayer
 
 
 def _get_bundle_options():
@@ -14,90 +17,79 @@ def _get_bundle_options():
     form_options = []
 
     for wms in WMS.objects.all():
-        layers = [{'id':layer.id, 'name':layer.name} for layer in WMSLayer.objects.filter(wms=wms)]
-        form_options.append({
-            'wms': wms.name,
-            'layers':layers,
-            })
+        layers = list(WMSLayer.objects.filter(wms=wms).values('id', 'name'))
+        wms_display = {
+                'name': wms.name,
+                'layers': layers,
+            }
+        form_options.append(wms_display)
 
     return form_options
 
 
-def _get_bundle_update(bundle):
-
-    bundle_data = []
-    layers = [(layer.id) for layer in BundleLayer.objects.filter(bundle=bundle)]
-    bundle_data.append({
+def _get_bundle_display(bundle):
+    return {
         'id': bundle.id,
         'name': bundle.name,
         'price': bundle.price,
-        'layers':layers,
-        })
-
-    return bundle_data
+        # 'layers': [layer.id for layer in BundleLayer.objects.filter(bundle=bundle)]
+        'layers': list(bundle.layers.all().values_list('id', flat=True)),
+        'is_removeable': bundle.is_removeable,
+        'wms_list': [(WMS.objects.get(pk=wms[0]).name ) for wms in BundleLayer.objects.filter(bundle=bundle).values_list('layer__wms_id').distinct()],
+    }
 
 
 @require_GET
+@ajax_required
 def all(request):
-    bundle_list = []
 
-    for bundle in Bundle.objects.all():
-        wms_service = [( WMS.objects.get(pk=wms[0]).name ) for wms in BundleLayer.objects.filter(bundle=bundle).values_list('layer__wms_id').distinct()]
-        
-        bundle_list.append({
-            'id': bundle.id,
-            'name': bundle.name,
-            'price': bundle.price,
-            'wms_service': wms_service
-        })
+    bundle_list = [_get_bundle_display(ob) for ob in Bundle.objects.all()]
+    form_options = _get_bundle_options()
 
-    return JsonResponse({'bundle_list': bundle_list})
+    rsp = {
+            'bundle_list': bundle_list,
+            'form_options': form_options,
+        }
+
+    return JsonResponse(rsp)
 
 
 @require_POST
-def create(request):
+@ajax_required
+def create(request, payload):
 
-    data = json.loads(request.body)
-    form = BundleForm(data)
+    form = BundleForm(payload)
     if form.is_valid():
-        form.instance.is_removeable = True 
+        form.instance.is_removeable = True
         form.save()
-        return JsonResponse({
-                'success': True
-            })
+        return JsonResponse({'success': True})
     else:
-        return JsonResponse({
-            'form_options': _get_bundle_options(),
-            'success': False
-            })
+        return JsonResponse({'success': False})
 
 
 @require_POST
-def update(request, pk):
-    bundle = Bundle.objects.get(pk=pk)
+@ajax_required
+def update(request, payload):
 
-    data = json.loads(request.body)
-    form = BundleForm(data, instance=bundle)
+    bundle = get_object_or_404(Bundle, pk=payload.get('id'))
+    form = BundleForm(payload, instance=bundle)
 
     if form.is_valid():
         form.save()
-        return JsonResponse({
-                'success': True
-            })
+        return JsonResponse({'success': True})
     else:
-
-        return JsonResponse({
-            'form_options': _get_bundle_options(),
-            'bundle_json': _get_bundle_update(bundle),
-            'success': False
-            })
+        return JsonResponse({'success': False})
 
 
 @require_POST
-def remove(request, pk):
+@ajax_required
+def remove(request, payload):
 
-    BundleLayer.objects.filter(bundle=pk).delete()
-    Bundle.objects.get(pk=pk).delete()
-    return JsonResponse({
-                    'success': True
-                })
+    pk = payload.get('id')
+
+    bundle = get_object_or_404(Bundle, pk=pk, is_removeable=True)
+
+    bundle.layers.all().delete()
+    bundle.delete()
+
+    return JsonResponse({'success': True})

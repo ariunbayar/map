@@ -7,23 +7,22 @@ class BundleForm(forms.ModelForm):
 
         model = Bundle
 
-
         fields = [
                 'name',
                 'price',
-                'layer'
+                'layers',
             ]
 
-        widgets = {'layer': forms.CheckboxSelectMultiple,}
+        widgets = {'layers': forms.CheckboxSelectMultiple}
 
         labels = {
                 'name': 'Багцийн нэр',
                 'price': 'Багцийн үнэ',
-                'layer': 'Давхаргууд',
+                'layers': 'Давхаргууд',
             }
 
         error_messages = {
                 'name': {'required': 'Оруулна уу!'},
                 'price': {'required': 'Оруулна уу!'},
-                'layer': {'required': 'Оруулна уу!'},
+                'layers': {'required': 'Оруулна уу!'},
             }

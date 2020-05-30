@@ -5,6 +5,7 @@ import LoginPage from "./LoginPage"
 import ConfigPage from "./ConfigPage"
 import HomePage from "./HomePage"
 import WMSPage from "./WMSPage"
+import BundlePage from "./BundlePage"
 
 
 export default class App extends Component {
@@ -26,6 +27,8 @@ export default class App extends Component {
                 <nav>
                     <Link to={"/p/"}>Нүүр</Link>
                     &nbsp;|&nbsp;
+                    <Link to={"/p/bundle/"}>Багц</Link>
+                    &nbsp;|&nbsp;
                     <Link to={"/p/wms/"}>WMS</Link>
                     &nbsp;|&nbsp;
                     <Link to={"/p/config/"}>Тохиргоо</Link>
@@ -37,6 +40,7 @@ export default class App extends Component {
                 <main>
                     <Switch>
                         <Route exact path={"/p/login/"} component={LoginPage}/>
+                        <Route exact path={"/p/bundle/"} component={BundlePage}/>
                         <Route exact path={"/p/wms/"} component={WMSPage}/>
                         <Route exact path={"/p/config/"} component={ConfigPage}/>
                         <Route exact path={"/p/"} component={HomePage}/>

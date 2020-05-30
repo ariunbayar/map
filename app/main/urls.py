@@ -51,8 +51,8 @@ urlpatterns = [
         [
             path('all/', bundle.views.all),
             path('create/', bundle.views.create),
-            path('<int:pk>/update/', bundle.views.update),
-            path('<int:pk>/remove/', bundle.views.remove),
+            path('update/', bundle.views.update),
+            path('remove/', bundle.views.remove),
         ],
         'bundle'
     ))),
