@@ -1,3 +1,4 @@
+from itertools import groupby
 import json
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -32,7 +33,6 @@ def _get_bundle_display(bundle):
         'id': bundle.id,
         'name': bundle.name,
         'price': bundle.price,
-        # 'layers': [layer.id for layer in BundleLayer.objects.filter(bundle=bundle)]
         'layers': list(bundle.layers.all().values_list('id', flat=True)),
         'is_removeable': bundle.is_removeable,
         'wms_list': [(WMS.objects.get(pk=wms[0]).name ) for wms in BundleLayer.objects.filter(bundle=bundle).values_list('layer__wms_id').distinct()],
@@ -93,3 +93,29 @@ def remove(request, payload):
     bundle.delete()
 
     return JsonResponse({'success': True})
+
+
+@require_POST
+@ajax_required
+def wms_layers(request, payload):
+
+    bundle = get_object_or_404(Bundle, pk=payload.get('id'))
+
+    wms_list = []
+
+    qs_layers = bundle.layers.all().order_by('wms__created_at')
+    _layer_to_display = lambda ob: {'id': ob.pk, 'name': ob.name, 'code': ob.code}
+    for wms, layers in groupby(qs_layers, lambda ob: ob.wms):
+        wms_data = {
+                'name': wms.name,
+                'url': 'http://localhost:8102/WMS/{}'.format(wms.pk),
+                'layers': [_layer_to_display(l) for l in layers],
+            }
+        wms_list.append(wms_data)
+
+
+    rsp = {
+        'wms_list': wms_list,
+    }
+
+    return JsonResponse(rsp)

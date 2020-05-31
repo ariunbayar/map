@@ -1,3 +1,11 @@
+*{
+    font-family: sans-serif;
+}
+body {
+    font-size: xx-small;
+}
+
+
 ul.list-recursive {
     padding-left: 1rem;
     border-left: 2px solid #ddd;
@@ -183,4 +191,32 @@ table td, table th {
     font-style: italic;
     padding-left: .3em;
     font-weight: 400;
+}
+
+
+.small{
+    font-size: smaller;
+}
+
+.split {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.split > .fullspan { grid-column: 1 / -1; }
+.split > .span2{ grid-column: span 2; }
+.split > .span3{ grid-column: span 3; }
+.split > .span4{ grid-column: span 4; }
+.split > .span5{ grid-column: span 5; }
+.split > .span6{ grid-column: span 6; }
+.split > .span7{ grid-column: span 7; }
+.split > .span8{ grid-column: span 8; }
+.split > .span9{ grid-column: span 9; }
+.split > .span10{ grid-column: span 10; }
+.split > .span11{ grid-column: span 11; }
+
+
+ul.compact {
+    list-style: none;
+    padding-left: 1rem;
 }

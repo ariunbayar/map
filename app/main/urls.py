@@ -53,6 +53,7 @@ urlpatterns = [
             path('create/', bundle.views.create),
             path('update/', bundle.views.update),
             path('remove/', bundle.views.remove),
+            path('wms-layers/', bundle.views.wms_layers),
         ],
         'bundle'
     ))),
