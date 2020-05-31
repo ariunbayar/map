@@ -9,7 +9,7 @@ export default class WMSLayerItems extends Component {
 
         this.state = {
             layers: props.layers,
-            visibility: props.layers.map(({code}) => ({code, is_visible: true}))
+            visibility: props.layers.map(({code}) => ({code, is_visible: false}))
         }
         this.handleToggleLayer = this.handleToggleLayer.bind(this)
 

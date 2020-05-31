@@ -93072,9 +93072,7 @@ var BundleMap = /*#__PURE__*/function (_Component) {
               projection: 'EPSG:3857',
               url: url,
               params: {
-                'LAYERS': layers.map(function (layer) {
-                  return layer.code;
-                }).join(',')
+                'LAYERS': layers[0].code
               }
             })
           })
@@ -93279,7 +93277,7 @@ var WMSLayerItem = /*#__PURE__*/function (_Component) {
     _this.state = {
       name: props.layer.name,
       code: props.layer.code,
-      is_visible: true
+      is_visible: false
     };
     _this.toggle = _this.toggle.bind(_assertThisInitialized(_this));
     return _this;
@@ -93380,7 +93378,7 @@ var WMSLayerItems = /*#__PURE__*/function (_Component) {
         var code = _ref.code;
         return {
           code: code,
-          is_visible: true
+          is_visible: false
         };
       })
     };

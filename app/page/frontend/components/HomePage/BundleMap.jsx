@@ -56,7 +56,7 @@ export default class BundleMap extends Component {
                         projection: 'EPSG:3857',
                         url: url,
                         params: {
-                            'LAYERS': layers.map((layer) => layer.code).join(',')
+                            'LAYERS': layers[0].code,
                         }
                     }),
                 }),

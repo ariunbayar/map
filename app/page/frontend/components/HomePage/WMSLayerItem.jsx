@@ -9,7 +9,7 @@ export default class WMSLayerItem extends Component {
         this.state = {
             name: props.layer.name,
             code: props.layer.code,
-            is_visible: true,
+            is_visible: false,
         }
 
         this.toggle = this.toggle.bind(this)
