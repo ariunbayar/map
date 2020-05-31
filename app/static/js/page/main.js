@@ -93072,7 +93072,9 @@ var BundleMap = /*#__PURE__*/function (_Component) {
               projection: 'EPSG:3857',
               url: url,
               params: {
-                'LAYERS': layers[0].code
+                'LAYERS': layers[0].code,
+                //'FORMAT': 'image/svg+xml',
+                'FORMAT': 'image/png'
               }
             })
           })

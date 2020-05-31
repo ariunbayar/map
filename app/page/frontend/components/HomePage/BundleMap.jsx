@@ -57,6 +57,8 @@ export default class BundleMap extends Component {
                         url: url,
                         params: {
                             'LAYERS': layers[0].code,
+                            //'FORMAT': 'image/svg+xml',
+                            'FORMAT': 'image/png',
                         }
                     }),
                 }),

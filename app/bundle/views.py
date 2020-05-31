@@ -108,7 +108,7 @@ def wms_layers(request, payload):
     for wms, layers in groupby(qs_layers, lambda ob: ob.wms):
         wms_data = {
                 'name': wms.name,
-                'url': 'http://localhost:8102/WMS/{}'.format(wms.pk),
+                'url': 'http://localhost:8102/WMS/{}/'.format(wms.pk),
                 'layers': [_layer_to_display(l) for l in layers],
             }
         wms_list.append(wms_data)
