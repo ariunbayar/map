@@ -33,7 +33,7 @@ export default class App extends Component {
                     &nbsp;|&nbsp;
                     <Link to={"/p/config/"}>Тохиргоо</Link>
                     &nbsp;|&nbsp;
-                    <Link to={"/p/login/"}>Нэвтрэх</Link>
+                    <a href="/login/">Нэвтрэх</a>
                     &nbsp;|&nbsp;
                     <a onClick={this.handleLogout}>Гарах</a>
                 </nav>

@@ -92189,8 +92189,8 @@ var App = /*#__PURE__*/function (_Component) {
         to: "/p/wms/"
       }, "WMS"), "\xA0|\xA0", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/p/config/"
-      }, "\u0422\u043E\u0445\u0438\u0440\u0433\u043E\u043E"), "\xA0|\xA0", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-        to: "/p/login/"
+      }, "\u0422\u043E\u0445\u0438\u0440\u0433\u043E\u043E"), "\xA0|\xA0", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: "/login/"
       }, "\u041D\u044D\u0432\u0442\u0440\u044D\u0445"), "\xA0|\xA0", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         onClick: this.handleLogout
       }, "\u0413\u0430\u0440\u0430\u0445")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
