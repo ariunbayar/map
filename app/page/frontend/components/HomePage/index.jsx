@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 
 import {service} from './service'
 import BundleMap from './BundleMap'

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment } from "react"
 
 import 'ol/ol.css'
 import {Map, View} from 'ol'

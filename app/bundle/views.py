@@ -104,7 +104,7 @@ def wms_layers(request, payload):
     wms_list = []
 
     qs_layers = bundle.layers.all().order_by('wms__created_at')
-    _layer_to_display = lambda ob: {'id': ob.pk, 'name': ob.name, 'code': ob.code}
+    _layer_to_display = lambda ob: {'name': ob.name, 'code': ob.code}
     for wms, layers in groupby(qs_layers, lambda ob: ob.wms):
         wms_data = {
                 'name': wms.name,

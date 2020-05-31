@@ -1,4 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment } from "react"
+
+import WMSLayerItems from "./WMSLayerItems"
 
 
 export default class WMSItem extends Component {
@@ -36,17 +38,11 @@ export default class WMSItem extends Component {
                     />
                     {name}
                 </label>
-                <ul className="compact">
-                    {layers.map(({name}, idx) =>
-                        <li key={idx}>
-                            <label>
-                                <input type="checkbox" onClick={() => this.handleToggle(0)}/>
-                                {name}
-                            </label>
-                        </li>
-                    )}
 
-                </ul>
+                <WMSLayerItems
+                    layers={layers}
+                    tileWMS={tile.getSource()}
+                />
             </Fragment>
         )
     }
